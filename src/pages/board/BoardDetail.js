@@ -17,7 +17,7 @@ const BoardDetail = () => {
         fileImgList: []
     });
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
 
@@ -59,6 +59,36 @@ const BoardDetail = () => {
 
     const goBoardReg = () => {
         navigate(`/board/boardReg?${searchParams}`);
+    }
+
+    const goBoardDelete = () => {
+
+        let formData = new FormData();
+        formData.append("boardNo", state.boardNo);
+
+        axios({
+			method: "delete",
+			url: `/localAdress/board/deleteBoard`,
+            data: formData
+		})
+            .then((res) => {
+
+                console.log('goBoardDelete : ', res.data);
+
+                if( res.data.resultCode === 200 && res.data.resultCode !== "" ) {
+
+                    alert(res.data.resultMessage);
+                    navigate(`/board/boardList`);
+
+                } else {
+                    alert(res.data.resultMessage);
+                }
+
+            })
+            .catch(() => {
+                console.log('goBoardDelete : 실패함')
+            })
+
     }
     
     return (
@@ -144,6 +174,7 @@ const BoardDetail = () => {
                 <div className="btn-wr" style={{justifyContent:"center"}}>
                     <a onClick={(e) => { goBoardReg() }} className="btn">수정</a>
                     <a onClick={(e) => { goBoardList() }} className="btn cancel">목록</a>
+                    <a onClick={(e) => { goBoardDelete() }} className="btn">삭제</a>
                 </div>
                 
             </div>

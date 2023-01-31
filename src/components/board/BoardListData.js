@@ -1,17 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import React, { useContext } from "react";
 import { BoardListContext } from "../../pages/board/BoardList";
+import { useSearchParams } from "react-router-dom";
 
 const BoardListData = ({ totCnt, boardData }) => {
 
   const navigate = useNavigate();
-
-  const { paramData, setParamData } = useContext(BoardListContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { paramData, setSearchParamData } = useContext(BoardListContext);
 
   const goBoardDetail = (boardNo) => {
     
-    let param = "targetBoardNo=" + boardNo + "&" + paramData;
-    setParamData(param);
+    let param = "";
+    let paramBoardNo = searchParams.get('targetBoardNo');
+
+    if( paramBoardNo !== '' && paramBoardNo !== null ) {
+
+      searchParams.set( "targetBoardNo", boardNo );
+      setSearchParams(searchParams);
+      param = searchParams;
+
+    } else {
+      param = "targetBoardNo=" + boardNo + "&" + paramData;
+    }
+
+    setSearchParamData(param);
     navigate(`/board/boardDetail?${param}`);
   }
 
@@ -22,7 +35,7 @@ const BoardListData = ({ totCnt, boardData }) => {
   return (
     <>
       <div className="board-info" style={{textAlign:"center", marginTop:-30}}>
-        <a href="" className="btn" onClick={(e) => { goRegBoard() } }>
+        <a className="btn" onClick={(e) => { goRegBoard() } }>
           게시글 등록
         </a>
       </div>
@@ -41,7 +54,7 @@ const BoardListData = ({ totCnt, boardData }) => {
           <tbody id="boardDataArea">
             {totCnt === 0 ? (
               <tr>
-                <td></td>
+                <td colSpan={4}>데이터가 없습니다.</td>
               </tr>
             ) : (
               boardData.map((it, index) => (

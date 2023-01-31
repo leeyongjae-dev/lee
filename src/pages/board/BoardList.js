@@ -3,29 +3,34 @@ import axios from "axios";
 import BoardListData from "../../components/board/BoardListData";
 import BoardListForm from "../../components/board/BoardListForm";
 import Pagination from "../../components/common/Pagination";
-import { useSearchParams } from "react-router-dom";
 import HeaderLayout from "../../components/layout/HeaderLayout";
+import { useSearchParams } from "react-router-dom";
 
 export const BoardListContext = createContext(null);
 
 const BoardList = () => {
+
+  let [initSearchParams] = useSearchParams();
+
+  let initParam = initSearchParams !== '' ? initSearchParams : '';
+
   let [boardData, setBoardData] = useState([]);
   let [totCnt, setTotCnt] = useState(0);
   let [currPage, setCurrPage] = useState(1);
-  let [searchParamData, setSearchParamData] = useState("");
+  let [searchParamData, setSearchParamData] = useState(initParam);
   let [paramData, setParamData] = useState("");
-
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const rowCount = 10;
 
   useEffect(() => {
     getBoardList();
+
   }, [currPage, searchParamData]);
 
   const getBoardList = () => {
-    
-    let param = "rowCount=" + rowCount + "&currPage=" + currPage + (searchParamData === "" ? "" : "&" + searchParamData);
+
+    let param = "rowCount=" + rowCount + "&currPage=" + currPage + (searchParamData === "" ? "" : ("&" + searchParamData));
+
     setParamData(param);
 
     axios({
@@ -54,7 +59,7 @@ const BoardList = () => {
 
     <BoardListContext.Provider value={{ setSearchParamData, setCurrPage, paramData, setParamData }}>
       
-      <HeaderLayout headerClass="sub-myservice" headerText="이용재 게시판" />
+      <HeaderLayout headerClass="sub-myservice" headerText="게시판" />
 
       <div id="container">
         <div id="cont" className="cont-myservice board-myservice board-data">
@@ -64,7 +69,7 @@ const BoardList = () => {
 
           <BoardListForm />
           <BoardListData totCnt={totCnt} boardData={boardData} />
-          <Pagination totCnt={totCnt} currPage={currPage} rowCount={rowCount} />
+          <Pagination totCnt={totCnt} currPage={currPage} rowCount={rowCount} setCurrPage={setCurrPage} />
 
         </div>
       </div>

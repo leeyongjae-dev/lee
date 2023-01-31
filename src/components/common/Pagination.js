@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
-import { BoardListContext } from "../../pages/board/BoardList";
+import React from "react";
 
-const Pagination = ({ totCnt, currPage, rowCount }) => {
+const Pagination = ({ totCnt, currPage, rowCount, setCurrPage }) => {
 
-  /** ===== Context사용 */
-  //setCurrPage 함수
-  const { setCurrPage } = useContext(BoardListContext);
+  console.log(`현재페이지: ${currPage}`);
 
   //한 화면에 나올 페이지수(1 2 3 4 5 이런거)
   let pagePerBlcok = 5;

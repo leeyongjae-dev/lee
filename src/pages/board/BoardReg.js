@@ -101,6 +101,8 @@ const BoardReg = () => {
 		})
 			.then((res) => {
 
+                console.log('goBoardSave : ', res.data);
+
                 if( res.data.data.boardNo !== null && res.data.data.boardNo !== "" ) {
                     alert(res.data.resultMessage);
 
@@ -125,6 +127,7 @@ const BoardReg = () => {
             <HeaderLayout headerClass="sub-myservice" headerText="이용재 게시판" />
             
             <form name="frmBoard" ref={boardFromRef}>
+                <input type="hidden" name="boardNo" value={searchParams.get("targetBoardNo")} />
                 <div id="cont" className="cont-myservice dtl-myservice">
                     <div className="cont-platform-tit bMg80">
                         {
@@ -195,10 +198,9 @@ const BoardReg = () => {
                     </div>
 
                     <div className="btn-wr" style={{justifyContent:"center"}}>
-                        <Link onClick={(e) => { goBoardSave() }} className="btn">저장</Link>
-                        {/* <a onClick={} className="btn">저장</a> */}
-                        <Link to={`/board/boardList?${searchParams}`} className="btn cancel">취소</Link>
-                        {/* <a onClick={(e) => { goBoardList() }} className="btn cancel">취소</a> */}
+                        <a onClick={(e) => { goBoardSave() }} className="btn">저장</a>
+                        <a onClick={(e) => { goBoardList() }} className="btn cancel">취소</a>
+                        {/* <Link to={`/board/boardList?${searchParams}`} className="btn cancel">취소</Link> */}
                     </div>
                     
                 </div>
