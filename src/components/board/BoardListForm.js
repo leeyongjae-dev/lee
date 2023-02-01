@@ -4,30 +4,74 @@ import { useSearchParams } from "react-router-dom";
 
 const BoardListForm = () => {
 
+  /*
+  * 검색 조건 > query string 선언
+  */
   const [searchParams, setSearchParams] = useSearchParams();
   
-  const [searchType, setSearchType] = useState(searchParams.get('searchType') !== null ? searchParams.get('searchType') : '');
-  const [searchBoardType, setSearchBoardType] = useState(searchParams.get('searchBoardType')!== null ? searchParams.get('searchBoardType') : '');
-  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('searchKeyword')!== null ? searchParams.get('searchKeyword') : '');
+  /*
+  * 검색 값 state 선언
+  */
+  const [ searchState, setSearchState] = useState({
+    searchType : searchParams.get('searchType') !== null ? searchParams.get('searchType') : ''
+    , searchBoardType : searchParams.get('searchBoardType')!== null ? searchParams.get('searchBoardType') : ''
+    , searchKeyword : searchParams.get('searchKeyword')!== null ? searchParams.get('searchKeyword') : ''
+  })
 
+  /*
+  * List context 선언
+  */
   const { setSearchParamData, setCurrPage } = useContext(BoardListContext);
 
+  /*
+  * 함수명 : goListFormSearch
+  * 설명 : 검색 조건 값 셋팅 후 (상위 useEffect() 목록 조회)
+  */
   const goListFormSearch = () => {
     let param = "";
 
-    if(searchType !== null && searchType !== '') param += `&searchType=` + searchType;
-    if(searchKeyword !== null && searchKeyword !== '') param += `&searchKeyword=` + searchKeyword;
-    if(searchBoardType !== null && searchBoardType !== '') param += `&searchBoardType=` + searchBoardType;
+    if(searchState.searchType !== null && searchState.searchType !== '') param += `&searchType=` + searchState.searchType;
+    if(searchState.searchKeyword !== null && searchState.searchKeyword !== '') param += `&searchKeyword=` + searchState.searchKeyword;
+    if(searchState.searchBoardType !== null && searchState.searchBoardType !== '') param += `&searchBoardType=` + searchState.searchBoardType;
 
     setSearchParamData(param);
     setCurrPage(1);
 
   }
 
+  /*
+  * 함수명 : goListFormReset
+  * 설명 : 검색 조건 값 초기화
+  */
   const goListFormReset = () => {
-    setSearchType("");
-    setSearchBoardType("");
-    setSearchKeyword("");
+    setSearchState({
+      searchType : ''
+    , searchBoardType : ''
+    , searchkeyword : ''
+    });
+  }
+
+  /*
+  * 함수명 : handleChangeParams
+  * 설명 : 입력 시, 검색 조건 state, param 값 셋팅
+  */
+  const handleChangeParams = (e) => {
+    setSearchState({
+      ...searchState
+      , [e.target.name] : e.target.value
+    });
+    searchParams.set(`${e.target.name}`, e.target.value );
+    setSearchParams(searchParams);
+  }
+
+  /*
+  * 함수명 : goEnterListFormSearch
+  * 설명 : Enter키 event
+  */
+  const goEnterListFormSearch = (e) => {
+    if( e.key === 'Enter') {
+      goListFormSearch();
+    }
   }
 
   return (
@@ -40,13 +84,8 @@ const BoardListForm = () => {
               <td>
                 <select className="select" 
                         name="searchType" 
-                        onChange={(e) => {
-                            setSearchType(e.target.value);
-                            searchParams.set( "searchType", e.target.value );
-                            setSearchParams(searchParams);
-                          }
-                        } 
-                        defaultValue={searchType}
+                        onChange={handleChangeParams}
+                        defaultValue={searchState.searchType}
                   >
                   <option value="">선택하세요</option>
                   <option value="title">제목</option>
@@ -59,14 +98,10 @@ const BoardListForm = () => {
                   type="text" 
                   placeholder="검색어를 입력하세요." 
                   name="searchKeyword" 
-                  onChange={(e) => 
-                    {
-                      setSearchKeyword(e.target.value);
-                      searchParams.set( "searchKeyword", e.target.value );
-                      setSearchParams(searchParams);
-                    }
-                  } 
-                  defaultValue={searchKeyword} />
+                  onChange={handleChangeParams}
+                  onKeyDown={goEnterListFormSearch}
+                  defaultValue={searchState.searchKeyword}
+                  />
               </td>
             </tr>
 
@@ -75,15 +110,8 @@ const BoardListForm = () => {
               <td>
                 <select className="select" 
                         name="searchBoardType" 
-                        onChange={
-                          (e) => 
-                          {
-                            setSearchBoardType(e.target.value);
-                            searchParams.set( "searchBoardType", e.target.value );
-                            setSearchParams(searchParams);
-                          }
-                        }
-                        defaultValue={searchBoardType}>
+                        onChange={handleChangeParams}
+                        defaultValue={searchState.searchBoardType}>
                   <option value="">전체</option>
                   <option value="ABOT1">공지사항</option>
                   <option value="ABOT2">경고</option>

@@ -10,23 +10,33 @@ export const BoardListContext = createContext(null);
 
 const BoardList = () => {
 
+  /*
+  * 검색 조건 > query string 선언
+  */
   let [initSearchParams] = useSearchParams();
-
   let initParam = initSearchParams !== '' ? initSearchParams : '';
 
+  /*
+  * List 셋팅 값 선언
+  */
+  const rowCount = 10;
   let [boardData, setBoardData] = useState([]);
   let [totCnt, setTotCnt] = useState(0);
   let [currPage, setCurrPage] = useState(1);
   let [searchParamData, setSearchParamData] = useState(initParam);
   let [paramData, setParamData] = useState("");
 
-  const rowCount = 10;
-
+  /*
+  * currPage, searchParamData 값 변동 시, List monut
+  */
   useEffect(() => {
     getBoardList();
-
   }, [currPage, searchParamData]);
 
+  /*
+  * 함수명 : getBoardList
+  * 설명 : 목록 조회
+  */
   const getBoardList = () => {
 
     let param = "rowCount=" + rowCount + "&currPage=" + currPage + (searchParamData === "" ? "" : ("&" + searchParamData));

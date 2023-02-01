@@ -7,10 +7,20 @@ import { useEffect, useRef, useState } from "react";
 import { fn_convertXss } from "../../utils/CommonUtil";
 
 const BoardReg = () => {
-
-    const navigate = useNavigate();
+    
+    /*
+    * 검색 조건 > query string 선언
+    */
     const [searchParams, setSearchParams] = useSearchParams();
+    
+    /*
+    * navigate 선언
+    */
+    const navigate = useNavigate();
 
+    /*
+    * 게시글 등록 값 state 선언
+    */
     const [state, setState] = useState({
         boardNo: "",
         title: "",
@@ -21,7 +31,10 @@ const BoardReg = () => {
         board_file: [],
         board_img: []
     });
-
+    
+    /*
+    * 현재 게시물 번호 값 셋팅 후 상세 조회
+    */
     useEffect(() => {
 
         const targetBoardNo = searchParams.get("targetBoardNo");
@@ -33,6 +46,10 @@ const BoardReg = () => {
         }
     }, []);
 
+    /*
+    * 함수명 : getBoardDetail
+    * 설명 : 상세 조회 후 값 셋팅
+    */
     const getBoardDetail = (boardNo) => {
         
         axios({
@@ -59,23 +76,37 @@ const BoardReg = () => {
 			.catch(() => {
 				console.log('getBoardDetail : 실패함')
 			})
-
     }
 
+    /*
+    * 함수명 : goBoardList
+    * 설명 : 목록 조회
+    */
     const goBoardList = () => {
         navigate(`/board/boardList?${searchParams}`);
     }
 
+    /*
+    * 참조 값 선언
+    */
     const editorRef = useRef();
     const boardFromRef = useRef();
 
+    /*
+    * 함수명 : handleChangeState
+    * 설명 : 값 입력 시, state 셋팅
+    */
     const handleChangeState = (e) => {
         setState({
           ...state,
           [e.target.name]: e.target.value,
         });
-      };
+    };
     
+    /*
+    * 함수명 : editorChangeState
+    * 설명 : 에디터 값 입력 시, html 변환 후 state 셋팅
+    */
     const editorChangeState = () => {
         const data = editorRef.current.getInstance().getHTML();
         setState({ 
@@ -84,6 +115,10 @@ const BoardReg = () => {
         })
     }
 
+    /*
+    * 함수명 : goBoardSave
+    * 설명 : 등록/수정 게시글 저장
+    */
     const goBoardSave = () => {
         
         console.log('saveBoardData : ', state);
@@ -119,7 +154,6 @@ const BoardReg = () => {
 			.catch(() => {
 				console.log('goBoardSave : 실패함')
 			})
-
     }
 
     return (

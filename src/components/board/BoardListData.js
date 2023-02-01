@@ -5,10 +5,25 @@ import { useSearchParams } from "react-router-dom";
 
 const BoardListData = ({ totCnt, boardData }) => {
 
+  /*
+  * navigate 선언
+  */
   const navigate = useNavigate();
+
+  /*
+  * 검색 조건 > query string 선언
+  */
   const [searchParams, setSearchParams] = useSearchParams();
+  
+  /*
+  * List context 선언
+  */
   const { paramData, setSearchParamData } = useContext(BoardListContext);
 
+  /*
+  * 함수명 : goBoardDetail
+  * 설명 : 상세 화면 이동
+  */
   const goBoardDetail = (boardNo) => {
     
     let param = "";
@@ -28,6 +43,10 @@ const BoardListData = ({ totCnt, boardData }) => {
     navigate(`/board/boardDetail?${param}`);
   }
 
+  /*
+  * 함수명 : goRegBoard
+  * 설명 : 등록 화면 이동
+  */
   const goRegBoard = () => {
     navigate(`/board/boardReg?${paramData}`);
   }

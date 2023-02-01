@@ -5,8 +5,20 @@ import { fn_convertXss, fn_fileDownload } from "../../utils/CommonUtil";
 import HeaderLayout from "../../components/layout/HeaderLayout";
 
 const BoardDetail = () => {
+    
+    /*
+    * 검색 조건 > query string 선언
+    */
+    const [searchParams] = useSearchParams();
 
+    /*
+    * navigate 선언
+    */
     const navigate = useNavigate();
+
+    /*
+    * 게시글 상세 값 state 선언
+    */
     const [state, setState] = useState({
         boardNo: "",
         title: "",
@@ -16,17 +28,19 @@ const BoardDetail = () => {
         fileList: [],
         fileImgList: []
     });
-
-    const [searchParams] = useSearchParams();
-
+    
+    /*
+    * 현재 게시물 번호 값 셋팅 후 상세 조회 페이지 mount
+    */
     useEffect(() => {
-
         let targetBoardNo = searchParams.get("targetBoardNo");
-
         getBoardDetail(targetBoardNo);
-
     }, []);
 
+    /*
+    * 함수명 : getBoardDetail
+    * 설명 : 상세 조회 후 값 셋팅
+    */
     const getBoardDetail = (boardNo) => {
         
         axios({
@@ -53,14 +67,26 @@ const BoardDetail = () => {
 
     }
 
+    /*
+    * 함수명 : goBoardList
+    * 설명 : 목록 화면 이동
+    */
     const goBoardList = () => {
         navigate(`/board/boardList?${searchParams}`);
     }
 
+    /*
+    * 함수명 : goBoardReg
+    * 설명 : 수정 화면 이동
+    */
     const goBoardReg = () => {
         navigate(`/board/boardReg?${searchParams}`);
     }
 
+    /*
+    * 함수명 : goBoardDelete
+    * 설명 : 게시글 삭제
+    */
     const goBoardDelete = () => {
 
         let formData = new FormData();

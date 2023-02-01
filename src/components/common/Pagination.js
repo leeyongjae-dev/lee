@@ -2,8 +2,6 @@ import React from "react";
 
 const Pagination = ({ totCnt, currPage, rowCount, setCurrPage }) => {
 
-  console.log(`현재페이지: ${currPage}`);
-
   //한 화면에 나올 페이지수(1 2 3 4 5 이런거)
   let pagePerBlcok = 5;
 
